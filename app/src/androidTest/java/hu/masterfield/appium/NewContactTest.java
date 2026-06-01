@@ -1,4 +1,4 @@
-package hu.masterfield;
+package hu.masterfield.appium;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.List;
 
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
