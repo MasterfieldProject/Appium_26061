@@ -1,6 +1,10 @@
 package hu.masterfield;
 
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -57,25 +61,68 @@ public class NewContactTest {
 
         Thread.sleep(3000);
 
-        WebElement newContactButton = driver.findElement(AppiumBy.id("com.google.android.dialer:id/empty_content_view_action"));
+        WebElement newContactButton;
+        try {
+            newContactButton = driver.findElement(AppiumBy.id("com.google.android.dialer:id/empty_content_view_action"));
+        } catch(NoSuchElementException ex) {
+            newContactButton = driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"com.google.android.dialer:id/contact_name\" and @text=\"Új névjegy\"]"));
+        }
         newContactButton.click();
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         WebElement firstname = driver.findElement(By.xpath("//android.widget.EditText[@text='Utónév']"));
-        firstname.sendKeys("Dani");
+        firstname.sendKeys("Master");
 
         WebElement lastname = driver.findElement(By.xpath("//android.widget.EditText[@text='Családnév']"));
-        lastname.sendKeys("Markó");
+        lastname.sendKeys("Field");
 
         WebElement company = driver.findElement(By.xpath("//android.widget.EditText[@text='Cég']"));
-        company.sendKeys("Szerencsejáték Zrt.");
+        company.sendKeys("Masterfield");
 
         WebElement phone = driver.findElement(By.xpath("//android.widget.EditText[@text='Telefon']"));
-        phone.sendKeys("06302345678");
+        phone.sendKeys("06301234567");
 
         WebElement saveButton = driver.findElement(AppiumBy.id("com.google.android.contacts:id/toolbar_button"));
         saveButton.click();
 
+        Thread.sleep(3000);
+
+        List<WebElement> contacts = driver.findElements(AppiumBy.id("com.google.android.dialer:id/contact_name"));
+        assertFalse(contacts.isEmpty());
+        for(WebElement cont : contacts) {
+            System.out.println(cont.getText());
+            assertTrue(cont.getText().length() > 0);
+        }
+
+    }
+
+    @Test
+    public void testDeleteContacts() throws InterruptedException {
+        WebElement contactsButton = driver.findElement(AppiumBy.id("com.google.android.dialer:id/tab_contacts"));
+        contactsButton.click();
+
+        Thread.sleep(3000);
+
+        List<WebElement> contacts;
+        do {
+                contacts = driver.findElements(AppiumBy.xpath("(//*[@resource-id='com.google.android.dialer:id/contact_name'])[2]"));
+                contacts.get(0).click();
+                Thread.sleep(3000);
+                WebElement menu = driver.findElement(AppiumBy.id("com.google.android.contacts:id/action_bar_overflow_menu"));
+                menu.click();
+
+                Thread.sleep(1000);
+                WebElement delete = driver.findElement(AppiumBy.xpath("//android.widget.TextView[@resource-id=\"com.google.android.contacts:id/title\" and @text=\"Törlés\"]"));
+                delete.click();
+
+                Thread.sleep(1000);
+
+                WebElement deleteAccept = driver.findElement(AppiumBy.id("android:id/button1"));
+                deleteAccept.click();
+
+                Thread.sleep(1000);
+                contacts = driver.findElements(AppiumBy.xpath("(//*[@resource-id='com.google.android.dialer:id/contact_name'])[2]"));
+        } while(contacts != null && contacts.size() > 0);
     }
 
     @AfterTest
