@@ -42,4 +42,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+
+    androidTestImplementation("io.appium:java-client:10.1.1")
+    androidTestImplementation("org.seleniumhq.selenium:selenium-java:4.44.0")
+    androidTestImplementation("org.testng:testng:7.12.0")
+    androidTestImplementation("commons-io:commons-io:2.22.0")
+    androidTestImplementation("org.apache.commons:commons-lang3:3.20.0")
 }
