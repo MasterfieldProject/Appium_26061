@@ -17,6 +17,7 @@ import java.util.Base64;
 
 import io.appium.java_client.Location;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidStartScreenRecordingOptions;
 import io.appium.java_client.android.geolocation.AndroidGeoLocation;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
@@ -77,7 +78,9 @@ public class LocationTest {
         System.out.println("Window width = " + size.getWidth());
 
         System.out.println("Start recording");
-        driver.startRecordingScreen();
+        driver.startRecordingScreen(new AndroidStartScreenRecordingOptions()
+                .enableBugReport());
+
         /*
         driver.startRecordingScreen(new AndroidStartScreenRecordingOptions().withVideoSize("1280X720")
                 .withTimeLimit(Duration.ofMinutes(2))
