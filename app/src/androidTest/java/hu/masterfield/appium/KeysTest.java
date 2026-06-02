@@ -90,13 +90,25 @@ public class KeysTest {
         String hours = "" + dt.getHour();
         String minutes = "" + dt.getMinute();
 
+        // sendkeys, nem működik
+        /*
+        WebElement hourEditText = wait.until(d -> d.findElement(AppiumBy.xpath("//android.widget.FrameLayout[@resource-id=\"com.google.android.deskclock:id/material_hour_text_input\"]/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.EditText")));
+        hourEditText.sendKeys("09");
+
+        Thread.sleep(50000);
+         */
+
         for (char c : hours.toCharArray()) {
             driver.pressKey(new KeyEvent(AndroidKey.valueOf("DIGIT_" + c))); // DIGIT_1, DIGIT_2
         }
 
         for (char c : minutes.toCharArray()) {
             driver.pressKey(new KeyEvent(AndroidKey.valueOf("DIGIT_" + c))); // DIGIT_1, DIGIT_2
+
+            // betűk esetén
+            //driver.pressKey(new KeyEvent(AndroidKey.valueOf(Character.toUpperCase(c) + "")));
         }
+
 
         wait.until(d -> d.findElement(AppiumBy.id("com.google.android.deskclock:id/material_timepicker_ok_button")));
     }
