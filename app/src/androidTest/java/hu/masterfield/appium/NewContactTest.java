@@ -93,6 +93,7 @@ public class NewContactTest {
 
     }
 
+    /*
     @Test
     public void testDeleteContacts() throws InterruptedException {
         WebElement contactsButton = driver.findElement(AppiumBy.id("com.google.android.dialer:id/tab_contacts"));
@@ -120,6 +121,51 @@ public class NewContactTest {
             Thread.sleep(1000);
             contacts = driver.findElements(AppiumBy.xpath("(//*[@resource-id='com.google.android.dialer:id/contact_name'])[2]"));
         } while (contacts != null && contacts.size() > 0);
+    }
+
+     */
+    @Test
+    public void testDeleteContacts() {
+
+        wait.until(d -> d.findElement(
+                AppiumBy.id("com.google.android.dialer:id/tab_contacts")
+        )).click();
+
+        List<WebElement> contacts;
+
+        do {
+            contacts = driver.findElements(
+                    //AppiumBy.id("com.google.android.dialer:id/contact_name")
+                    AppiumBy.xpath("(//*[@resource-id='com.google.android.dialer:id/contact_name'])[2]")
+            );
+
+            if (contacts.size() == 0) {
+                break;
+            }
+
+            contacts.get(0).click();
+
+            WebElement menu = wait.until(d ->
+                    d.findElement(AppiumBy.id("com.google.android.contacts:id/action_bar_overflow_menu"))
+            );
+            menu.click();
+
+            WebElement delete = wait.until(d ->
+                    d.findElement(AppiumBy.xpath("//android.widget.TextView[@text=\"Törlés\"]"))
+            );
+            delete.click();
+
+            WebElement deleteAccept = wait.until(d ->
+                    d.findElement(AppiumBy.id("android:id/button1"))
+            );
+            deleteAccept.click();
+
+            contacts = driver.findElements(
+                    //AppiumBy.id("com.google.android.dialer:id/contact_name")
+                    AppiumBy.xpath("(//*[@resource-id='com.google.android.dialer:id/contact_name'])[2]")
+            );
+
+        } while (contacts.size() > 0);
     }
 
     @AfterTest
