@@ -29,6 +29,7 @@ public class ResetAppTest {
     public static final String APP_PACKAGE = "io.appium.android.apis";
     public static final String APK_PATH = System.getProperty("user.dir") + "/apks/ApiDemos-debug.apk";
     public static final String LAUNCH_ACTIVITY = ".ApiDemos";
+    public static final String WAIT_ACTIVITY = ".view.ProgressBar3";
 
     private AndroidDriver driver;
 
@@ -40,14 +41,13 @@ public class ResetAppTest {
                 .setDeviceName(DEVICE_NAME)
                 .setAutomationName(AUTOMATION)
                 .setApp(APK_PATH)
-                .setAppPackage(APP_PACKAGE)
-                .setAppActivity(LAUNCH_ACTIVITY)
+                .setAppWaitPackage(APP_PACKAGE)
+                .setAppWaitActivity(WAIT_ACTIVITY)
                 .setNoReset(false)
-                .setFullReset(true)
+                .setFullReset(false)
                 .setLanguage(LANG)
                 .setLocale(LOCALE);
 
-        options.setCapability("appium:autoLaunch", false);
         driver = new AndroidDriver(new URL(APPIUM_URL), options);
     }
 
