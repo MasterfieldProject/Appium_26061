@@ -54,6 +54,7 @@ public class TescoTest {
                 .setLocale(LOCALE)
                 .setNoReset(true);
 
+        driver.activateApp("hu.bitnet.tesco");
         options.setCapability("appium:forceAppLaunch", true);
 
         driver = new AndroidDriver(new URL(APPIUM_URL), options);
@@ -87,7 +88,7 @@ public class TescoTest {
 
         WebElement searchInputField = wait.until(d -> driver.findElement(AppiumBy.id("hu.bitnet.tesco:id/search_input_field")));
         searchInputField.sendKeys("monster");
-        driver.pressKey(new KeyEvent(AndroidKey.ENTER));
+        driver.pressKey(new KeyEvent(AndroidKey.SEARCH));
 
         WebElement productCountTextView = wait.until(d -> d.findElement(AppiumBy.xpath("//android.view.View[contains(@content-desc,'Product count')]/android.widget.TextView")));
         String countText = productCountTextView.getText();
