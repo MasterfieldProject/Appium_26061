@@ -1,9 +1,9 @@
 package hu.masterfield.appium;
 
-import org.openqa.selenium.Rectangle;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.PointerInput;
-import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -12,10 +12,12 @@ import org.testng.annotations.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.Collections;
+import java.util.List;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
 public class TescoTest {
@@ -34,8 +36,7 @@ public class TescoTest {
     // public static final String LANG = "en";
 
     /* App params */
-    public static final String APP_PACKAGE = "com.example.drawingapp";
-    public static final String APP_ACTIVITY = ".MainActivity";
+    public static final String APP_PACKAGE = "hu.bitnet.tesco";
 
     private AndroidDriver driver;
     private WebDriverWait wait;
@@ -48,66 +49,55 @@ public class TescoTest {
                 .setDeviceName(DEVICE_NAME)
                 .setAutomationName(AUTOMATION)
                 .setAppPackage(APP_PACKAGE)
-                .setAppActivity(APP_ACTIVITY)
+                .setAutoGrantPermissions(true)
                 .setLanguage(LANG)
                 .setLocale(LOCALE)
-                .setNoReset(false);
+                .setNoReset(true);
+
+        options.setCapability("appium:forceAppLaunch", true);
 
         driver = new AndroidDriver(new URL(APPIUM_URL), options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-
-        Util.enablePointerPosition();
     }
 
     @Test
-    public void test() throws InterruptedException {
-        WebElement view = wait.until(d -> d.findElement(AppiumBy.id("com.example.drawingapp:id/drawingView")));
-        Rectangle viewRect = view.getRect();
-        System.out.println("x = " + viewRect.x);
-        System.out.println("y = " + viewRect.y);
-        System.out.println("height = " + viewRect.height);
-        System.out.println("width = " + viewRect.width);
+    public void test1() throws InterruptedException {
+        WebElement homeTextView = wait.until(d -> driver.findElement(AppiumBy.id("hu.bitnet.tesco:id/home_tesco_text")));
+        assertEquals(homeTextView.getText(), "Üdvözöljük.");
 
-        int squareSize = 300;
-        int centerX = viewRect.x + viewRect.width / 2;
-        int centerY = viewRect.y + viewRect.height / 2;
-
-        int leftX = centerX - squareSize / 2;
-        int rightX = centerX + squareSize / 2;
-        int topY = centerY - squareSize / 2;
-        int bottomY = centerY + squareSize / 2;
-
-        int duration = 10;
-
-        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
-        PointerInput.Origin origin = PointerInput.Origin.viewport();
-
-        Sequence actions = new Sequence(finger, 1);
-        actions.addAction(finger.createPointerMove(Duration.ZERO, origin, leftX, topY));
-        actions.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
-        actions.addAction(finger.createPointerMove(Duration.ofMillis(duration), origin, rightX, topY));
-        actions.addAction(finger.createPointerMove(Duration.ofMillis(duration), origin, rightX, bottomY));
-        actions.addAction(finger.createPointerMove(Duration.ofMillis(duration), origin, leftX, bottomY));
-        actions.addAction(finger.createPointerMove(Duration.ofMillis(duration), origin, leftX, topY));
-
-        actions.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
-
-        driver.perform(Collections.singletonList(actions));
-
-        Thread.sleep(5000);
+        WebElement bottomNavigationView = wait.until(d -> driver.findElement(AppiumBy.id("hu.bitnet.tesco:id/bottom_navigation_view")));
+        List<WebElement> itemBottomNavigationList = bottomNavigationView.findElements(AppiumBy.className("android.widget.TextView"));
+        assertTrue(itemBottomNavigationList.size() == 5);
+        assertEquals(itemBottomNavigationList.get(0).getText(), "Főoldal");
+        assertEquals(itemBottomNavigationList.get(1).getText(), "Kedvencek");
+        assertEquals(itemBottomNavigationList.get(2).getText(), "Keresés");
+        assertEquals(itemBottomNavigationList.get(3).getText(), "Rendelések");
+        assertEquals(itemBottomNavigationList.get(4).getText(), "Kosár");
     }
 
-    private void toggleLock() {
-        boolean deviceLocked = driver.isDeviceLocked();
-        System.out.println("Locked = " + deviceLocked);
+    @Test
+    public void test2() throws InterruptedException {
+        WebElement homeTextView = wait.until(d -> driver.findElement(AppiumBy.id("hu.bitnet.tesco:id/home_tesco_text")));
+        assertEquals(homeTextView.getText(), "Üdvözöljük.");
 
-        if (deviceLocked) {
-            System.out.println("Unlocking");
-            driver.unlockDevice();
-        } else {
-            System.out.println("Locking");
-            driver.lockDevice();
-        }
+        // navigate to search screen
+        WebElement bottomNavigationView = wait.until(d -> driver.findElement(AppiumBy.id("hu.bitnet.tesco:id/bottom_navigation_view")));
+        List<WebElement> itemBottomNavigationList = bottomNavigationView.findElements(AppiumBy.className("android.widget.TextView"));
+        itemBottomNavigationList.get(2).click();
+
+        WebElement searchInputField = wait.until(d -> driver.findElement(AppiumBy.id("hu.bitnet.tesco:id/search_input_field")));
+        searchInputField.sendKeys("monster");
+        driver.pressKey(new KeyEvent(AndroidKey.ENTER));
+
+        WebElement productCountTextView = wait.until(d -> d.findElement(AppiumBy.xpath("//android.view.View[contains(@content-desc,'Product count')]/android.widget.TextView")));
+        String countText = productCountTextView.getText();
+
+        System.out.println("DEBUG countText = " + countText);
+        assertEquals(countText, "26 termék");
+
+        wait.until(d -> d.findElement(AppiumBy.xpath("//*[@resource-id='hu.bitnet.tesco:id/plp_list_dynamic_filter_layout']//android.widget.Button[1]"))).click();
+
+        wait.until(d -> d.findElement(AppiumBy.xpath("//android.widget.LinearLayout[@resource-id='hu.bitnet.tesco:id/additional_filter_container'])[1]"))).click();
     }
 
     @AfterTest
