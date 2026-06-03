@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -134,7 +135,6 @@ public class NavigationGoogleMapsTest {
         int startOffsetX = 0, endOffsetX = 200;
         int startOffsetY = 0, endOffsetY = 200;
 
-        /*
         System.out.println("Zooming");
         Sequence zoom1 = new Sequence(finger1, 1);
         zoom1.addAction(finger1.createPointerMove(Duration.ZERO, origin, centerX + startOffsetX, centerY - startOffsetY));
@@ -154,9 +154,7 @@ public class NavigationGoogleMapsTest {
         System.out.println("Zoom done");
 
         Thread.sleep(5000);
-        */
 
-        /*
         System.out.println("Pinching");
         Sequence pinch1 = new Sequence(finger1, 1);
         pinch1.addAction(finger1.createPointerMove(Duration.ZERO, origin, centerX - 300, centerY - 300));
@@ -175,24 +173,22 @@ public class NavigationGoogleMapsTest {
         driver.perform(Arrays.asList(pinch1, pinch2));
         System.out.println("Pinch done");
 
-         */
-
         System.out.println("Rotating");
-        Sequence pinch1 = new Sequence(finger1, 1);
-        pinch1.addAction(finger1.createPointerMove(Duration.ZERO, origin, centerX - 300, centerY - 300));
-        pinch1.addAction(finger1.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        Sequence rotate1 = new Sequence(finger1, 1);
+        rotate1.addAction(finger1.createPointerMove(Duration.ZERO, origin, centerX - 300, centerY - 300));
+        rotate1.addAction(finger1.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
         //zoom1.addAction(new Pause(finger1, Duration.ofMillis(200)));
-        pinch1.addAction(finger1.createPointerMove(Duration.ofMillis(300), origin, centerX + 300, centerY - 300));
-        pinch1.addAction(finger1.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        rotate1.addAction(finger1.createPointerMove(Duration.ofMillis(300), origin, centerX + 300, centerY - 300));
+        rotate1.addAction(finger1.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
-        Sequence pinch2 = new Sequence(finger2, 1);
-        pinch2.addAction(finger2.createPointerMove(Duration.ZERO, origin, centerX + 300, centerY + 300));
-        pinch2.addAction(finger2.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        Sequence rotate2 = new Sequence(finger2, 1);
+        rotate2.addAction(finger2.createPointerMove(Duration.ZERO, origin, centerX + 300, centerY + 300));
+        rotate2.addAction(finger2.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
         //zoom2.addAction(new Pause(finger2, Duration.ofMillis(200)));
-        pinch2.addAction(finger2.createPointerMove(Duration.ofMillis(300), origin, centerX - 300, centerY + 300));
-        pinch2.addAction(finger2.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        rotate2.addAction(finger2.createPointerMove(Duration.ofMillis(300), origin, centerX - 300, centerY + 300));
+        rotate2.addAction(finger2.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
-        driver.perform(Arrays.asList(pinch1, pinch2));
+        driver.perform(Arrays.asList(rotate1, rotate2));
         System.out.println("Rotate done");
     }
 

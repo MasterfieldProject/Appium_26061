@@ -1,0 +1,13 @@
+Tesco 25.13.0
+
+3 apk van hozzá, ezért nem lehet csak úgy "ráhúzni" az eszközre, parancs kell hozzá:
+
+& "C:\Users\felhasznalonev\AppData\Local\Android\Sdk\platform-tools\adb.exe" install-multiple `
+"C:\Appium\Frissites_15\forras\Appium_todelete\app\apks\tesco_25_13_0\base.apk" `
+"C:\Appium\Frissites_15\forras\Appium_todelete\app\apks\tesco_25_13_0\split_config.arm64_v8a.apk" `
+"C:\Appium\Frissites_15\forras\Appium_todelete\app\apks\tesco_25_13_0\split_config.xxhdpi.apk"
+
+Magyarázat:
+1. kell neki az adb.exe helye, ezt nem kell kiírni, ha beletesszük környezeti változóba
+2. kell neki a multiple telepítés, meg kell határozni a 3 .apk helyét
+
